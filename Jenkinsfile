@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    enviroment {
+        IMAGE_NAME = "cdb-3375-final-project"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -9,19 +13,21 @@ pipeline {
     }
         stage('Build') {
             steps {
-                echo 'Construyendo la aplicación...'
+                echo 'building the application...'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Ejecutando pruebas...'
+                echo 'executing tests...'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Desplegando aplicación...'
+                echo 'Deployment the application...'
+                docker run -d -p 8081:8081 $IMAGE_NAME
             }
         }
     }

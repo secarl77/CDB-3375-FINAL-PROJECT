@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    enviroment {
+    environment {
         IMAGE_NAME = "cdb-3375-final-project"
     }
 

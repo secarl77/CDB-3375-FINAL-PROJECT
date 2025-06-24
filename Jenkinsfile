@@ -4,8 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/secarl77/CDB-3375-FINAL-PROJECT'
-            }
+		git credentialsId: '8a2b59a0-bcd4-497e-bdb3-b7489e053370', url: 'https://github.com/secarl77/CDB-3375-FINAL-PROJECT.git'}
         }
 
         stage('Build') {

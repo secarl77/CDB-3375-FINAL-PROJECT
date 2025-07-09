@@ -15,9 +15,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                echo "Installing systems dependecies..."
-                apt-get update
-                apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip
                 echo 'Creating virtual environment...'
                 python3.11 -m venv ${VENV_DIR}
                 echo "Enable virtual environment..."

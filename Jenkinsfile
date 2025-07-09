@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "cdb-3375-final-project"
+        VENV_PATH = ".venv"
     }
 
     stages {
@@ -37,7 +38,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deployment the application...'
+                echo 'Deploying the application...'
                 sh 'docker run -d -p 8081:8081 $IMAGE_NAME'
             }
         }

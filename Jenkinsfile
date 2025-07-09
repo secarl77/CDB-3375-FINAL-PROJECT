@@ -9,49 +9,45 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-        	checkout scm
-	     }
-    }
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh '''
-                #!/bin/bash
-                echo 'Creating virtual environment...'
+                echo "Creating virtual environment..."
                 python3.11 -m venv ${VENV_DIR}
-                echo 'Enable virtual environment and install dependencies...'
-                source ${VENV_DIR}/bin/activate
-                pip install --upgrade pip
+                echo "Activating environment and installing dependencies..."
+                . ${VENV_DIR}/bin/activate && \
+                pip install --upgrade pip && \
                 pip install -r requirements.txt
                 '''
             }
-    }
+        }
 
-
-        stage('Test') {
+        stage('Run Tests') {
             steps {
                 sh '''
-                echo "Executing unitary tests..."
-                source ${VENV_DIR}/bin/activate
+                echo "Running tests..."
+                . ${VENV_DIR}/bin/activate && \
                 python -m unittest discover -s tests
                 '''
             }
         }
 
-        stage('Build') {
-            steps {
-                echo 'building the application...'
-                sh 'docker build -t $IMAGE_NAME .'
-            }
-        }
-
-
-
         stage('Deploy') {
             steps {
-                echo 'Deploying the application...'
+                echo 'Deploying application...'
                 sh 'docker run -d -p 8081:8081 $IMAGE_NAME'
             }
         }
     }
 }
-

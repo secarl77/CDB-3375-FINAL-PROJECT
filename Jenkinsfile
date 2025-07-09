@@ -23,10 +23,15 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                echo "Creating virtual environment..."
-                python3 -m venv ${VENV_DIR}
+                #!/bin/bash
+                echo "Cleaning virtual environment..."
+                rm -rfv venv
+
+                echo "Creating virtual environment"
+                python3.11 -m venv ${VENV_DIR}
+
                 echo "Activating environment and installing dependencies..."
-                . ${VENV_DIR}/bin/activate
+                #. ${VENV_DIR}/bin/activate
                 ./venv/bin/pip --version
                 #python3-pip install -r requirements.txt
                 '''

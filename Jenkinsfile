@@ -25,10 +25,10 @@ pipeline {
                 sh '''
                 echo "Creating virtual environment..."
                 python3 -m venv ${VENV_DIR}
+                ls ${VENV_DIR}/bin
                 echo "Activating environment and installing dependencies..."
-                . ${VENV_DIR}/bin/activate && \
-                pip install --upgrade pip && \
-                pip install -r requirements.txt
+                //python3-pip install --upgrade pip && \
+                //python3-pip install -r requirements.txt
                 '''
             }
         }

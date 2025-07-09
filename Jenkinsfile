@@ -28,7 +28,7 @@ pipeline {
                 echo "Activating environment and installing dependencies..."
                 #ls ${VENV_DIR}
                 . ${VENV_DIR}/bin/activate
-                ${VENV_DIR}/bin/pip install --upgrade pip
+                ls ${VENV_DIR}/bin
                 #python3-pip install -r requirements.txt
                 '''
             }

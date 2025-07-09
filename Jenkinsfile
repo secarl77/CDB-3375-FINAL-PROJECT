@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Creating virtual environment..."
-                python3.11 -m venv ${VENV_DIR}
+                python3 -m venv ${VENV_DIR}
                 echo "Activating environment and installing dependencies..."
                 . ${VENV_DIR}/bin/activate && \
                 pip install --upgrade pip && \
@@ -38,7 +38,7 @@ pipeline {
                 sh '''
                 echo "Running tests..."
                 . ${VENV_DIR}/bin/activate && \
-                python -m unittest discover -s tests
+                python3 -m unittest discover -s tests
                 '''
             }
         }

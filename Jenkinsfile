@@ -14,7 +14,7 @@ pipeline {
     }
         stage('Install Dependencies') {
             steps {
-                sh ''''
+                sh '''
                 echo "Installing systems dependecies..."
                 sudo apt-get update
                 sudo apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip
@@ -24,14 +24,17 @@ pipeline {
                 source ${VENV_DIR}/bin/activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
-                ''''
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                echo 'executing tests...'
-		        sh 'python3 -m unittest discover -s tests'
+                sh '''
+                echo "Executing unitary tests..."
+                source ${VENV_DIR}/bin/activate
+                python -m unittest discover -s tests
+                '''
             }
         }
 

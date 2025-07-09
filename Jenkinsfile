@@ -32,8 +32,8 @@ pipeline {
 
                 echo "Activating environment and installing dependencies..."
                 #. ${VENV_DIR}/bin/activate
-                ./venv/bin/pip --version
-                #python3-pip install -r requirements.txt
+                ./venv/bin/pip install --upgrade pip
+                ./venv/bin/pip install -r requirements.txt
                 '''
             }
         }

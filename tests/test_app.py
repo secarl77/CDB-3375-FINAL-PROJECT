@@ -1,18 +1,67 @@
 import unittest
-from run import app  # Importa la instancia de la app desde run.py
+from app import create_app, db
+from app.models import User
+from werkzeug.security import generate_password_hash
 
-class RoutesTestCase(unittest.TestCase):
+class BaseTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
+        self.app = create_app()
+        self.app.config['TESTING'] = True
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        self.app.config['WTF_CSRF_ENABLED'] = False
+        self.client = self.app.test_client()
 
-    def test_login_route(self):
-        response = self.app.get('/login')
-        self.assertEqual(response.status_code, 200)
+        with self.app.app_context():
+            db.create_all()
+            user = User(
+                username='testuser',
+                email='test@example.com',
+                password_hash=generate_password_hash('password'),
+                role='user'
+            )
+            db.session.add(user)
+            db.session.commit()
 
-    def test_register_route(self):
-        response = self.app.get('/register')
+    def login(self):
+        return self.client.post('/login', data={
+            'username': 'testuser',
+            'password': 'password'
+        }, follow_redirects=True)
+
+    def logout(self):
+        return self.client.get('/logout', follow_redirects=True)
+
+    def tearDown(self):
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
+
+
+class AuthTestCase(BaseTestCase):
+    def test_login(self):
+        response = self.login()
         self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Dashboard', response.data)
+
+    def test_logout(self):
+        self.login()
+        response = self.logout()
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Login', response.data)
+
+    def test_dashboard(self):
+        self.login()
+        response = self.client.get('/dashboard')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Dashboard', response.data)
+
+    def test_users_list(self):
+        self.login()
+        response = self.client.get('/users')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Users', response.data)
+
+
 
 if __name__ == '__main__':
     unittest.main()

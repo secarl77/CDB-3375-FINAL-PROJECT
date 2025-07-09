@@ -11,6 +11,16 @@ pipeline {
         	checkout scm
 	     }
     }
+	stage('Install Dependencies') {
+            steps {
+                sh '''
+                python3 -m venv $VENV_PATH
+                . $VENV_PATH/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
+                '''
+            }
+        }
         stage('Build') {
             steps {
                 echo 'building the application...'

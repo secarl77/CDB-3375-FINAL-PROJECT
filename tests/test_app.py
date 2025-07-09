@@ -22,6 +22,11 @@ class BaseTestCase(unittest.TestCase):
             db.session.add(user)
             db.session.commit()
 
+    def test_register_route_failure(self):
+        # Test fail
+        response = self.app.get('/register')
+        self.assertEqual(response.status_code, 200, "Expected 200 OK, but got something else")
+
     def login(self):
         return self.client.post('/login', data={
             'username': 'testuser',

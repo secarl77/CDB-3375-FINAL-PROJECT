@@ -28,7 +28,7 @@ pipeline {
                 echo "Activating environment and installing dependencies..."
                 #ls ${VENV_DIR}
                 . ${VENV_DIR}/bin/activate
-                #pip install --upgrade pip
+                pip install --upgrade pip
                 #python3-pip install -r requirements.txt
                 '''
             }
@@ -47,7 +47,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
-                sh 'docker run -d -p 8081:8081 $IMAGE_NAME'
+                #sh 'docker run -d -p 8081:8081 $IMAGE_NAME'
             }
         }
     }

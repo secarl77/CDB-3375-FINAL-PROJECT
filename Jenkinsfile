@@ -18,9 +18,7 @@ pipeline {
                 echo 'Creating virtual environment...'
                 python3.11 -m venv ${VENV_DIR}
                 echo "Enable virtual environment..."
-                . ${VENV_DIR}/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                . ${VENV_DIR}/bin/activate && pip install --upgrade pip && pip install -r requirements.txt
                 '''
             }
         }

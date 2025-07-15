@@ -38,6 +38,22 @@ pipeline {
             }
         }
 
+        stage('Run Flak App in Background'){
+            steps {
+                sh '''
+                echo "[🚀] Iniciando la aplicación Flask..."
+                //nohup ./venv/bin/python run.py > flask.log 2>&1 &
+
+                /*echo "[⏱] Esperando que Flask esté disponible..."
+                for i in {1..10}; do
+                    curl -s http://localhost:${FLASK_PORT}/login && break
+                    echo "⏳ Esperando..."
+                    sleep 2
+                done*/
+                '''
+            }
+
+        }
         stage('Run Tests') {
             steps {
                 sh '''

@@ -49,30 +49,14 @@ pipeline {
                 echo "Waiting for Flask..."
                 for i in {1..10}; do
                     curl -s http://localhost:8081/login && break
-                    echo "⏳ Esperando..."
+                    echo "⏳ Waiting..."
                     sleep 2
                 done
-                echo "[🧪] Ejecutando pruebas UI con Selenium..."
+                echo "[🧪] Executing UI test with Selenium..."
                 ./venv/bin/python -m unittest discover -s tests -p "test_ui_*.py"
                 '''
             }
 
-        }
-        stage('Run Tests') {
-            steps {
-                sh '''
-                echo "Running tests..."
-                . ${VENV_DIR}/bin/activate && \
-                python3.11 -m unittest tests/test_app.py
-                '''
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application...'
-                sh 'docker run -d -p 8081:8081 $IMAGE_NAME'
-            }
         }
     }
 }

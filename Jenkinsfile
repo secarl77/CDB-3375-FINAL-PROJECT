@@ -31,7 +31,7 @@ pipeline {
                 python3.11 -m venv ${VENV_DIR}
 
                 echo "Activating environment and installing dependencies..."
-                #. ${VENV_DIR}/bin/activate
+                . ${VENV_DIR}/bin/activate
                 ./venv/bin/pip install --upgrade pip
                 ./venv/bin/pip install -r requirements.txt
                 '''
@@ -41,15 +41,10 @@ pipeline {
         stage('Run Flak App in Background'){
             steps {
                 sh '''
-                echo "[🚀] Iniciando la aplicación Flask..."
-                //nohup ./venv/bin/python run.py > flask.log 2>&1 &
+                #!/bin/bash
+                echo "starting Flask application..."
+                . ${VENV_DIR}/bin/activate
 
-                /*echo "[⏱] Esperando que Flask esté disponible..."
-                for i in {1..10}; do
-                    curl -s http://localhost:${FLASK_PORT}/login && break
-                    echo "⏳ Esperando..."
-                    sleep 2
-                done*/
                 '''
             }
 

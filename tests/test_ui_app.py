@@ -24,10 +24,10 @@ class LoginUITest(unittest.TestCase):
         self.driver.find_element(By.NAME, "login").click()
         time.sleep(1)
 
-    #def test_login_page_shows_dashboard(self):
-    #    self.login()
-    #    self.driver.get(f"{self.base_url}/dashboard")
-    #    self.assertIn("Dashboard", self.driver.page_source)
+    def test_login_page_shows_dashboard(self):
+        self.login()
+        self.driver.get(f"{self.base_url}/dashboard")
+        self.assertIn("Dashboard", self.driver.page_source)
 
     def test_logout_redirects_to_login(self):
         self.login()

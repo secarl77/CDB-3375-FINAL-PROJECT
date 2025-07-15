@@ -52,7 +52,8 @@ pipeline {
                     echo "⏳ Esperando..."
                     sleep 2
                 done
-                echo server up
+                echo "[🧪] Ejecutando pruebas UI con Selenium..."
+                ./venv/bin/python -m unittest discover -s tests -p "test_ui_*.py"
                 '''
             }
 

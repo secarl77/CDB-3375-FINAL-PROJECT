@@ -24,10 +24,6 @@ pipeline {
             steps {
                 sh '''
                 #!/bin/bash
-                echo "installing python3.11-venv"
-                apt update
-                apt install -y python3.11-venv
-
                 echo "Cleaning virtual environment..."
                 rm -rfv venv
 

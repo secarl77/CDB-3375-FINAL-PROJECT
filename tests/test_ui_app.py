@@ -26,7 +26,6 @@ class LoginUITest(unittest.TestCase):
 
     def test_login_page_shows_dashboard(self):
         self.login()
-        self.driver.get(f"{self.base_url}/dashboard")
         self.assertIn("Dashboard", self.driver.page_source)
 
     def test_logout_redirects_to_login(self):

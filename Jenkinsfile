@@ -44,7 +44,14 @@ pipeline {
                 #!/bin/bash
                 echo "starting Flask application..."
                 . ${VENV_DIR}/bin/activate && \
-                python3 --version
+                nohup ./venv/bin/python3 run.py > flask.log 2>&1 &
+
+                echo "Waiting for Flask..."
+                for i in {1..10}; do
+                    curl -s http://localhost:8081/login && break
+                    echo "⏳ Esperando..."
+                    sleep 2
+                done
 
                 '''
             }

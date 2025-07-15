@@ -56,6 +56,8 @@ pipeline {
                 done
                 echo "[🧪] Executing UI test with Selenium..."
                 ./venv/bin/python -m unittest discover -s tests -p "test_ui_*.py"
+                echo "🛑 Stopping Flask application (PID: $FLASK_PID)..."
+                kill $FLASK_PID
                 '''
             }
 

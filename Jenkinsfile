@@ -38,13 +38,15 @@ pipeline {
             }
         }
 
-        stage('Run Flak App in Background'){
+        stage('Run Flak App in Background and making UI tests'){
             steps {
                 sh '''
                 #!/bin/bash
                 echo "starting Flask application..."
                 . ${VENV_DIR}/bin/activate && \
                 nohup ./venv/bin/python3 run.py > flask.log 2>&1 &
+                FLASK_PID=$!
+                echo "✅ Flask started with PID: $FLASK_PID"
 
                 echo "Waiting for Flask..."
                 for i in {1..10}; do

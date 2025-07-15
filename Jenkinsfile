@@ -52,7 +52,7 @@ pipeline {
                     echo "⏳ Esperando..."
                     sleep 2
                 done
-
+                echo server up
                 '''
             }
 

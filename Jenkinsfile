@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "cdb-3375-final-project"
         VENV_DIR = "venv"
+        IMAGE_TAG = "v1"
     }
 
     stages {
@@ -61,6 +62,19 @@ pipeline {
                 '''
             }
         }
+         stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    // Login to DockerHub and push image
+                    sh '''
+                    docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                    docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                    docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                    '''
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'

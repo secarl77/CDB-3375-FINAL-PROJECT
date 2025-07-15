@@ -46,7 +46,7 @@ class LoginUITest(unittest.TestCase):
         time.sleep(1)
         self.assertIn("Users", self.driver.page_source)
 
-   def test_register_page_exists(self):
+    def test_register_page_exists(self):
         self.driver.get(f"{self.base_url}/register")
         time.sleep(1)
         self.assertIn("Register", self.driver.page_source)

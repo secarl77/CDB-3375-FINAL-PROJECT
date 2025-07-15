@@ -43,7 +43,8 @@ pipeline {
                 sh '''
                 #!/bin/bash
                 echo "starting Flask application..."
-                . ${VENV_DIR}/bin/activate
+                . ${VENV_DIR}/bin/activate && \
+                python3 --version
 
                 '''
             }

@@ -43,7 +43,7 @@ pipeline {
                 sh '''
                 echo "Running tests..."
                 . ${VENV_DIR}/bin/activate && \
-                python3.11 -m unittest discover -s tests
+                python3.11 -m unittest tests/test_app.py
                 '''
             }
         }

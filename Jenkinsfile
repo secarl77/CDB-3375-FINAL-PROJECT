@@ -78,6 +78,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
+                echo "IMAGE_NAME: $IMAGE_NAME"
+                echo "IMAGE_TAG: $IMAGE_TAG"
                 sshagent(['ec2-ssh-key']) {
                 sh '''
                 ssh -o StrictHostKeyChecking=no ubuntu@15.222.248.38 '

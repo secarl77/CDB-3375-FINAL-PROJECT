@@ -78,16 +78,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
-                echo "IMAGE_NAME: $IMAGE_NAME"
-                echo "IMAGE_TAG: $IMAGE_TAG"
-                echo "secarl/$IMAGE_NAME:$IMAGE_TAG"
                 sshagent(['ec2-ssh-key']) {
                 sh '''
                 ssh -o StrictHostKeyChecking=no ubuntu@15.222.248.38 '
                     docker stop webapp || true
                     docker rm webapp || true
-                    docker pull "secarl/$IMAGE_NAME:$IMAGE_TAG"
-                    docker run -d --name webapp -p 8081:8081 "secarl/$IMAGE_NAME:$IMAGE_TAG"
+                    docker pull secarl/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker run -d --name webapp -p 8081:8081 secarl/${IMAGE_NAME}:${IMAGE_TAG}
                     '
                 '''
                 }

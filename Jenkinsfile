@@ -87,6 +87,7 @@ pipeline {
                     docker run -d --name webapp -p 8081:8081 secarl/$IMAGE_NAME:$IMAGE_TAG
                     '
                 '''
+                }
             }
         }
     }

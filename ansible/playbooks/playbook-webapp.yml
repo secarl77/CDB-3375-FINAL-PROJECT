@@ -1,0 +1,7 @@
+- hosts: webapp
+  become: yes
+  vars:
+    jenkins_user_docker: "jenkins"
+  roles:
+    - webapp
+    - docker

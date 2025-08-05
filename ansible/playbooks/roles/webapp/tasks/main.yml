@@ -1,0 +1,10 @@
+- name: Installing basic dependencies
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  loop:
+    - python3
+    - python3-pip
+    - openjdk-17-jdk
+

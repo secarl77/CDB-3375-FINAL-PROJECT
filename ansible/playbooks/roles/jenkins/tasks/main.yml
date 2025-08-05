@@ -184,11 +184,6 @@
     var: cli_output.stdout
 
 
-
-
-
-
-
 - name: Crear nodo devopstools en Jenkins con Jenkins CLI
   set_fact:
     # Nodo devopstools
@@ -224,6 +219,37 @@
 - name: Mostrar salida de Jenkins CLI
   debug:
     var: cli_output.stdout
+
+- name: Crear nodo remoto 'webapp' en Jenkins vía SSH
+  set_fact:
+    node_name: "webapp"
+    node_description: "Agente remoto webapp conectado por SSH"
+    node_user: "ubuntu"
+    node_port: 22
+    ssh_credential_id: "ec2-ssh-key"
+    executors: 1
+    node_mode: "NORMAL"
+    node_labels: "webapp"
+    node_host: "35.182.245.204"
+
+- name: Generar archivo XML de configuración del nodo
+  template:
+    src: node-config.xml.j2
+    dest: "/tmp/{{ node_name }}.xml"
+
+- name: Crear nodo con Jenkins CLI
+  shell: |
+    java -jar {{ jenkins_cli_jar_path }} \
+    -s {{ jenkins_url }} \
+    -auth {{ jenkins_user }}:{{ jenkins_password }} \
+    create-node {{ node_name }} < /tmp/{{ node_name }}.xml
+  register: cli_output
+  ignore_errors: true  # Evita fallo si ya existe
+
+- name: Mostrar resultado del CLI
+  debug:
+    var: cli_output.stdout
+
 
 
 - name: Reiniciar Jenkins para aplicar el script

@@ -29,7 +29,7 @@ pipeline {
                 rm -rfv venv
 
                 echo "Creating virtual environment"
-                python3.11 -m venv ${VENV_DIR}
+                python3 -m venv ${VENV_DIR}
 
                 echo "Activating environment and installing dependencies..."
                 . ${VENV_DIR}/bin/activate

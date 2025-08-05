@@ -1,5 +1,5 @@
 pipeline {
-    agent { label "jenkins" }
+    agent any
     environment {
         IMAGE_NAME = "cdb-3375-final-project"
         VENV_DIR = "venv"

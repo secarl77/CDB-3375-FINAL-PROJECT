@@ -1,8 +1,8 @@
 pipeline {
-    agent any
+    agent { label 'jenkins' }
     environment {
         IMAGE_NAME = "cdb-3375-final-project"
-        VENV_DIR = "venv"
+        VENV_DIR = "${WORKSPACE}/venv"
         IMAGE_TAG = "v1"
     }
 
@@ -11,6 +11,7 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
+                sh 'echo $VENV_DIR'
                 checkout scm
             }
         }
@@ -18,7 +19,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'sudo docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
             }
         }
 

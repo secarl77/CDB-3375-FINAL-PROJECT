@@ -1,16 +1,11 @@
-import com.cloudbees.plugins.credentials.*
-import com.cloudbees.plugins.credentials.domains.*
-import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
-
-def domain = Domain.global()
-def credentialsStore = Jenkins.instance.getExtensionList(
-    'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
-)[0].getStore()
-
-// Parámetros para la credencial
-def credentialsId = "ec2-ssh-key"
-def username = "ubuntu"
-def privateKey = """-----BEGIN RSA PRIVATE KEY-----
+<com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey>
+  <scope>GLOBAL</scope>
+  <id>ec2-ssh-key</id>
+  <description>SSH key for EC2</description>
+  <username>ubuntu</username>
+  <privateKeySource class="com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource">
+    <privateKey>
+      -----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAsvdaeRblHsupbVEi9C3Fe0yj1o0ndxwPR+B+WzP3OSSoFEZq
 3QN2VASFxgZeDAYnb9p2ieRvsWwcRiqDp6b7sJWMBE1zIOWagQv+6NpdOrJHHUBv
 yCLB8fB4BLHtW6SdfzhJpvuUfQYImFy+SI0y1Ghe/0LB0ZbA1b/XP7fU49w8mARy
@@ -37,23 +32,7 @@ wHDoNDRpDnplZFQQp7WHyLLJxK1CWUvxJiqZKu8BK415y7/T3CD/0FYzlUSmUYAY
 xcx8AIkBsj+iDwpHqxyp5OqzsV/4/cT5BEQ7IvEWg4+cGTX6xpoXZQU3eHEvekoi
 0SmGciXgr4G0fWde3ZokVKzMKG3ALqF5JsdBcYyGhAomAF6hwNI=
 -----END RSA PRIVATE KEY-----
-"""
-
-def credentials = new BasicSSHUserPrivateKey(
-    CredentialsScope.GLOBAL,
-    credentialsId,
-    username,
-    new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(privateKey),
-    "",
-    "Credencial creada automáticamente"
-)
-
-// Verificar si ya existe
-def existing = credentialsStore.getCredentials(domain).find { it.id == credentialsId }
-if (existing == null) {
-    println("Creando credencial SSH con id '${credentialsId}'")
-    credentialsStore.addCredentials(domain, credentials)
-} else {
-    println("Credencial SSH con id '${credentialsId}' ya existe")
-}
-
+    </privateKey>
+  </privateKeySource>
+  <passphrase/>
+</com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey>

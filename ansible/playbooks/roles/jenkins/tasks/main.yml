@@ -79,16 +79,7 @@
 - name: Crear credenciales SSH en Jenkins
   template:
     src: templates/create-ssh-cred.groovy.j2
-    dest: /var/lib/jenkins/init.groovy.d/create-ssh-cred.groovy
-    owner: jenkins
-    group: jenkins
-    mode: '0644'
-
-- name: Reiniciar Jenkins para aplicar cambios
-  service:
-    name: jenkins
-    state: restarted
-
+    dest: /tmp/create-ssh-cred.xml
 
 - name: Descargar jenkins-plugin-cli
   get_url:
@@ -142,6 +133,53 @@
     -s {{ jenkins_url }} \
     -auth {{ jenkins_user }}:{{ jenkins_password }} \
     create-job {{ job_name }} < /tmp/job-config.xml
+
+- name: Crear credencial SSH en Jenkins con CLI
+  shell: |
+    java -jar {{ jenkins_cli_jar_path }} \
+    -s {{ jenkins_url }} \
+    -auth {{ jenkins_user }}:{{ jenkins_password }} \
+    create-credentials-by-xml system::system::jenkins _ < /tmp/create-ssh-cred.xml
+
+- name: Crear nodo devopstools en Jenkins con Jenkins CLI
+  hosts: localhost
+  vars:
+    # Nodo devopstools
+    node_name: "devopstools"
+    node_description: "Nodo para pruebas UI con Selenium"
+    node_user: "ubuntu"
+    node_port: 22
+    ssh_credential_id: "ec2-ssh-key"
+    executors: 1
+    node_mode: "NORMAL"             # "NORMAL" o "EXCLUSIVE"
+    node_labels: "devopstools"
+
+  tasks:
+    - name: Obtener IP del nodo devopstools desde inventory
+      set_fact:
+          node_host: "{{ hostvars['devops']['ansible_host'] }}"
+
+    - name: Mostrar IP del nodo
+      debug:
+        msg: "IP del nodo devopstools: {{ node_host }}"
+
+    - name: Generar XML del nodo
+      template:
+        src: templates/node-config.xml.j2
+        dest: /tmp/{{ node_name }}.xml
+
+    - name: Crear nodo remoto en Jenkins
+      shell: |
+        java -jar {{ jenkins_cli_jar_path }} \
+        -s {{ jenkins_url }} \
+        -auth {{ jenkins_user }}:{{ jenkins_password }} \
+        create-node {{ node_name }} < /tmp/{{ node_name }}.xml
+      register: cli_output
+
+    - name: Mostrar salida de Jenkins CLI
+      debug:
+        var: cli_output.stdout
+
 
 - name: Reiniciar Jenkins para aplicar el script
   systemd:

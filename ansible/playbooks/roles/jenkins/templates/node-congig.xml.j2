@@ -1,0 +1,19 @@
+<slave>
+  <name>{{ node_name }}</name>
+  <description>{{ node_description }}</description>
+  <remoteFS>/home/{{ node_user }}/jenkins-agent</remoteFS>
+  <numExecutors>{{ executors }}</numExecutors>
+  <mode>{{ node_mode }}</mode>
+  <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+  <launcher class="hudson.plugins.sshslaves.SSHLauncher">
+    <host>{{ node_host }}</host>
+    <port>{{ node_port }}</port>
+    <credentialsId>{{ ssh_credential_id }}</credentialsId>
+    <launchTimeoutSeconds>60</launchTimeoutSeconds>
+    <maxNumRetries>3</maxNumRetries>
+    <retryWaitTime>15</retryWaitTime>
+  </launcher>
+  <label>{{ node_labels }}</label>
+  <nodeProperties/>
+</slave>
+

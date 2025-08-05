@@ -8,3 +8,4 @@ blueocean
 docker-plugin
 pipeline-stage-view
 pipeline-model-definition
+ssh-agent

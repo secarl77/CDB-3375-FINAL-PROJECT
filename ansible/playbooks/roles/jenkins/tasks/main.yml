@@ -76,6 +76,20 @@
     group: jenkins
     mode: '0755'
 
+- name: Crear credenciales SSH en Jenkins
+  template:
+    src: templates/create-ssh-cred.groovy.j2
+    dest: /var/lib/jenkins/init.groovy.d/create-ssh-cred.groovy
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+- name: Reiniciar Jenkins para aplicar cambios
+  service:
+    name: jenkins
+    state: restarted
+
+
 - name: Descargar jenkins-plugin-cli
   get_url:
     url: https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar

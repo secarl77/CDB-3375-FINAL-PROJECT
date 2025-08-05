@@ -118,6 +118,9 @@
     mode: '0755'
     force: yes
 
+- name: Verificar valores de jenkins_user y jenkins_password
+  debug:
+    msg: "Usuario: {{ jenkins_user }}, Password: {{ jenkins_password }}"
 
 - name: Crear job Jenkins con autenticación
   shell: |

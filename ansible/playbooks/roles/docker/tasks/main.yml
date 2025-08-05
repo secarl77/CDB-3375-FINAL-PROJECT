@@ -43,3 +43,9 @@
     groups: docker
     append: yes
 
+
+- name: Reiniciar Jenkins para aplicar el script
+  systemd:
+    name: jenkins
+    state: restarted
+

@@ -40,21 +40,21 @@ pipeline {
         }
 
         stage('Start Flask App on Jenkins') {
-        steps {
-            sh '''
-                #!/bin/bash
-                echo "🚀 Iniciando la aplicación Flask en background..."
+            steps {
+                sh '''
+                    #!/bin/bash
+                    echo "🚀 Iniciando la aplicación Flask en background..."
 
-                # Activa entorno virtual y lanza la app
-                . ${VENV_DIR}/bin/activate && \
-                nohup ./venv/bin/python3 run.py > flask.log 2>&1 &
+                    # Activa entorno virtual y lanza la app
+                    . ${VENV_DIR}/bin/activate && \
+                    nohup ./venv/bin/python3 run.py > flask.log 2>&1 &
 
-                # Guarda el PID para luego poder detenerla
-                echo $! > flask.pid
-                echo "✅ Flask iniciado en background (PID guardado)"
-            '''
+                    # Guarda el PID para luego poder detenerla
+                    echo $! > flask.pid
+                    echo "✅ Flask iniciado en background (PID guardado)"
+                '''
+            }
         }
-    }
 
     /*     stage('Docker Push') {
             steps {

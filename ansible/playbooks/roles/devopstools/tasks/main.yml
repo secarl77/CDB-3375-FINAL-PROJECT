@@ -6,6 +6,7 @@
   loop:
     - python3
     - python3-pip
+    - openjdk-17-jdk
 
 - name: Install Chromium
   apt:

@@ -44,6 +44,11 @@
     groups: docker
     append: yes
 
+- name: Agregar el usuario ubuntu al grupo docker
+  user:
+    name: "ubuntu"
+    groups: docker
+    append: yes
 
 - name: Reiniciar Jenkins para aplicar el script
   systemd:

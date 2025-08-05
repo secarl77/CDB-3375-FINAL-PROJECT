@@ -5,7 +5,7 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>https://github.com/secarl77/CDB-3324-FINAL-PROJECT</url>
+	<url>https://github.com/secarl77/CDB-3375-FINAL-PROJECT.git</url>
         <credentialsId>github-automatic-creds</credentialsId>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>

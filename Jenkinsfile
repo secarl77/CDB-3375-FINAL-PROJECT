@@ -47,8 +47,8 @@ pipeline {
                     echo "🚀 Iniciando la aplicación Flask en background..."
 
                     # Activa entorno virtual y lanza la app
-                    . ${VENV_DIR}/bin/activate && \
-                    nohup ./venv/bin/python3 run.py > flask.log 2>&1 &
+                    ./venv/bin/activate && \
+                    ./venv/bin/python3 run.py
 
                     # Guarda el PID para luego poder detenerla
                     echo $! > flask.pid

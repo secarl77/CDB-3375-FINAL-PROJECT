@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo "Este pipeline se está ejecutando en el nodo: ${env.NODE_NAME}"
                 checkout scm
             }
         }

@@ -62,7 +62,7 @@ pipeline {
                 '''
             }
         }
-         stage('Docker Push') {
+    /*     stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     // Login to DockerHub and push image
@@ -89,6 +89,6 @@ pipeline {
                 """
                 }
             }
-        }
+        }*/
     }
 }

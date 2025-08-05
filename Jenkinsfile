@@ -9,6 +9,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                sh 'whoami'
+                sh 'hostname'
                 checkout scm
             }
         }

@@ -12,7 +12,8 @@
     github_username: "{{ lookup('env', 'GITHUB_USER') }}"
     github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
     github_cred_id: "github-automatic-creds"
-
+    jenkins_user_docker: "jenkins"
   roles:
     - jenkins
+    - docker
 

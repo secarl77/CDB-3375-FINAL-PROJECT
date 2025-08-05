@@ -1,0 +1,45 @@
+---
+- name: Instalar dependencias necesarias
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+
+- name: Agregar clave GPG oficial de Docker
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Agregar repositorio de Docker
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+    filename: docker
+
+- name: Instalar Docker Engine
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+    update_cache: yes
+
+- name: Habilitar y arrancar el servicio Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Agregar el usuario Jenkins al grupo docker
+  user:
+    name: "{{ jenkins_user_docker }}"
+    groups: docker
+    append: yes
+

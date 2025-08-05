@@ -9,6 +9,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
+            agent { label 'jenkins' }
             steps {
                 echo "Este pipeline se está ejecutando en el nodo: ${env.NODE_NAME}"
                 checkout scm
@@ -16,6 +17,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent { label 'jenkins' }
             steps {
                 echo 'Building Docker image...'
                 sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
@@ -23,6 +25,7 @@ pipeline {
         }
 
         stage('Install Dependencies') {
+            agent { label 'jenkins' }
             steps {
                 sh '''
                 #!/bin/bash
@@ -41,6 +44,7 @@ pipeline {
         }
 
         stage('Start Flask App on Jenkins') {
+            agent { label 'jenkins' }
             steps {
                 sh '''
                     #!/bin/bash

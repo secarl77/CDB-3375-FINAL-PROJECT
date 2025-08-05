@@ -1,6 +1,5 @@
 pipeline {
-    agent { label 'jenkins' }
-
+    agent {label 'jenkins' }
     environment {
         IMAGE_NAME = "cdb-3375-final-project"
         VENV_DIR = "venv"
@@ -8,7 +7,6 @@ pipeline {
     }
 
     stages {
-    agent { label 'jenkins' }
         stage('Verificar nodo') {
             steps {
                 sh 'echo "¡Nodo funcionando correctamente!"'

@@ -28,6 +28,7 @@
       - docker-ce
       - docker-ce-cli
       - containerd.io
+      - python3.12-venv
     state: latest
     update_cache: yes
 

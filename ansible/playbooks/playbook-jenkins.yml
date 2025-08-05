@@ -13,6 +13,9 @@
     github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
     github_cred_id: "github-automatic-creds"
     jenkins_user_docker: "jenkins"
+    dockerhub_credential_id: "dockerhub-credential"
+    dockerhub_username: "secarl"
+    dockerhub_password: "Scca201077$"
 
   roles:
     - docker

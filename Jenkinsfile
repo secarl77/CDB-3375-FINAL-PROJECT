@@ -65,9 +65,9 @@ pipeline {
             }
         }
 
-    /*     stage('Docker Push') {
+        stage('Docker Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     // Login to DockerHub and push image
                     sh '''
                     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -77,7 +77,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'

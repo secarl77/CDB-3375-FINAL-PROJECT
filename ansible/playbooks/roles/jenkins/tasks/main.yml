@@ -92,6 +92,25 @@
     src: templates/create-ssh-cred.groovy.j2
     dest: /tmp/create-ssh-cred.xml
 
+- name: Crear credencial DockerHub en Jenkins (UsernamePassword)
+  shell: |
+    cat <<EOF | java -jar {{ jenkins_cli_jar_path }} \
+      -s {{ jenkins_url }} \
+      -auth {{ jenkins_user }}:{{ jenkins_password }} \
+      create-credentials-by-xml system::system::jenkins _ 
+    <com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>
+      <scope>GLOBAL</scope>
+      <id>{{ dockerhub_credential_id }}</id>
+      <description>Credenciales DockerHub para Ansible</description>
+      <username>{{ dockerhub_username }}</username>
+      <password>{{ dockerhub_password }}</password>
+    </com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl>
+    EOF
+  register: dockerhub_cred_creation
+  ignore_errors: true
+  tags: dockerhub
+
+
 - name: Descargar jenkins-plugin-cli
   get_url:
     url: https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar

@@ -79,7 +79,7 @@ pipeline {
         }
 
         stage('Deploy') {
-            agent { label 'jenkins' }
+            agent { label 'webapp' }
             steps {
                 echo 'Deploying application...'
                 sshagent(['ec2-ssh-key']) {

@@ -77,13 +77,14 @@ pipeline {
                 }
             }
         }
-/*
+
         stage('Deploy') {
+            agent { label 'jenkins' }
             steps {
                 echo 'Deploying application...'
                 sshagent(['ec2-ssh-key']) {
                 sh """
-                ssh -o StrictHostKeyChecking=no ubuntu@15.222.248.38 '
+                ssh -o StrictHostKeyChecking=no ubuntu@35.182.245.204 '
                     docker stop webapp || true
                     docker rm webapp || true
                     docker pull secarl/${IMAGE_NAME}:${IMAGE_TAG}
@@ -92,6 +93,6 @@ pipeline {
                 """
                 }
             }
-        }*/
+        }
     }
 }

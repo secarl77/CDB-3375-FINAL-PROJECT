@@ -8,7 +8,18 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+    agent { label 'jenkins' }
+        stage('Verificar nodo') {
+            steps {
+                sh 'echo "¡Nodo funcionando correctamente!"'
+                sh 'whoami'
+                sh 'hostname'
+            }
+        }
+    }
+}
+
+    /*    stage('Checkout') {
             agent { label 'jenkins' }
             steps {
                 echo "Este pipeline se está ejecutando en el nodo: ${env.NODE_NAME}"
@@ -60,7 +71,7 @@ pipeline {
                 '''
             }
         }
-
+*/
     /*     stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {

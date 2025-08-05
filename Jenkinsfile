@@ -16,8 +16,6 @@ pipeline {
                 sh 'hostname'
             }
         }
-    }
-}
 
     /*    stage('Checkout') {
             agent { label 'jenkins' }

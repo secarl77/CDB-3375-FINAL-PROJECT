@@ -41,19 +41,22 @@ pipeline {
             }
         }
 
-        stage('Start Flask App on Jenkins') {
+        stage('Levantar Flask en background') {
             steps {
                 sh '''
-                    #!/bin/bash
-                    echo "🚀 Iniciando la aplicación Flask en background..."
+                echo "🚀 Iniciando Flask app en background..."
+                . ${VENV_DIR}/bin/activate
+                nohup ${VENV_DIR}/bin/python run.py > flask.log 2>&1 &
+                echo $! > flask.pid
 
-                    # Activa entorno virtual y lanza la app
-                    . ${VENV_DIR}/bin/activate && \
-                    nohup ./venv/bin/python3 run.py > flask.log &
-
-                    # Guarda el PID para luego poder detenerla
-                    echo $! > flask.pid
-                    echo "✅ Flask iniciado en background (PID guardado)"
+                sleep 5
+                if ps -p $(cat flask.pid) > /dev/null; then
+                    echo "✅ Flask app está corriendo con PID $(cat flask.pid)"
+                else
+                    echo "❌ Falló al iniciar Flask. Verifica flask.log:"
+                    cat flask.log
+                    exit 1
+                fi
                 '''
             }
         }

@@ -40,7 +40,6 @@ pipeline {
         }
 
         stage('Start Flask App on Jenkins') {
-        //agent { label 'jenkins' } // Asegúrate que este label apunta al nodo Jenkins
         steps {
             sh '''
                 #!/bin/bash

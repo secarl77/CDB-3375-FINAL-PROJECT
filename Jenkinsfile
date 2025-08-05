@@ -39,29 +39,24 @@ pipeline {
             }
         }
 
-        stage('Run Flak App in Background and making UI tests'){
-            steps {
-                sh '''
+        stage('Start Flask App on Jenkins') {
+        //agent { label 'jenkins' } // Asegúrate que este label apunta al nodo Jenkins
+        steps {
+            sh '''
                 #!/bin/bash
-                echo "starting Flask application..."
+                echo "🚀 Iniciando la aplicación Flask en background..."
+
+                # Activa entorno virtual y lanza la app
                 . ${VENV_DIR}/bin/activate && \
                 nohup ./venv/bin/python3 run.py > flask.log 2>&1 &
-                FLASK_PID=$!
-                echo "✅ Flask started with PID: $FLASK_PID"
 
-                echo "Waiting for Flask..."
-                for i in {1..10}; do
-                    curl -s http://localhost:8081/login && break
-                    echo "⏳ Waiting..."
-                    sleep 2
-                done
-           #     echo "[🧪] Executing UI test with Selenium..."
-           #     ./venv/bin/python -m unittest discover -s tests -p "test_ui_*.py"
-           #     echo "🛑 Stopping Flask application (PID: $FLASK_PID)..."
-           #     kill $FLASK_PID
-                '''
-            }
+                # Guarda el PID para luego poder detenerla
+                echo $! > flask.pid
+                echo "✅ Flask iniciado en background (PID guardado)"
+            '''
         }
+    }
+
     /*     stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {

@@ -48,7 +48,7 @@ pipeline {
 
                     # Activa entorno virtual y lanza la app
                     . ${VENV_DIR}/bin/activate && \
-                    nohub ./venv/bin/python3 run.py > flask.log
+                    nohup ./venv/bin/python3 run.py > flask.log
 
                     # Guarda el PID para luego poder detenerla
                     echo $! > flask.pid

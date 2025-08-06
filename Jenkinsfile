@@ -82,17 +82,15 @@ pipeline {
             agent { label 'webapp' }
             steps {
                 echo 'Deploying application...'
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'KEY')]) {
-                    sh '''
-                        echo "🚀 Haciendo deploy en remoto vía SSH..."
-
-                        ssh -i "$KEY" -o StrictHostKeyChecking=no ubuntu@35.182.245.204 '
-                            docker stop flask_app || true
-                            docker rm flask_app || true
-                            docker pull $DOCKER_IMAGE
-                            docker run -d --name flask_app -p 8081:8081 $DOCKER_IMAGE
-                        '
-                    '''
+                sshagent(['ec2-ssh-key']) {
+                sh """
+                ssh -o StrictHostKeyChecking=no ubuntu@35.182.245.204 '
+                    docker stop webapp || true
+                    docker rm webapp || true
+                    docker pull secarl/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker run -d --name webapp -p 8081:8081 secarl/${IMAGE_NAME}:${IMAGE_TAG}
+                    '
+                """
                 }
             }
         }

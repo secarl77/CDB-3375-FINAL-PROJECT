@@ -1,32 +1,32 @@
-- name: Instalar Java
+- name: Install Java
   apt:
     name: openjdk-17-jdk
     update_cache: yes
     state: present
 
-- name: Descargar clave GPG de Jenkins
+- name: Download jenkins GPG key
   get_url:
       url: https://pkg.jenkins.io/debian/jenkins.io.key
       dest: /usr/share/keyrings/jenkins-keyring.asc
       mode: '0644'
 
-- name: Agregar repositorio Jenkins con signed-by
+- name: Add Jenkins repository with signed-by
   copy:
     dest: /etc/apt/sources.list.d/jenkins.list
     content: |
       deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/
     mode: '0644'
 
-- name: Actualizar índice de paquetes
+- name: Update packages
   apt:
     update_cache: yes
 
-- name: Instalar Jenkins
+- name: Install Jenkins
   apt:
     name: jenkins
     state: present
 
-- name: Asegurar permisos correctos en carpetas de Jenkins
+- name: Check correct permits on jenkins folders
   file:
     path: "{{ item }}"
     owner: jenkins
@@ -37,20 +37,20 @@
     - /var/lib/jenkins
     - /var/cache/jenkins
 
-- name: Iniciar Jenkins
+- name: Start Jenkins
   service:
       name: jenkins
       state: started
       enabled: yes
 
-- name: Desactivar el Setup Wizard
+- name: Disable Setup Wizard
   lineinfile:
     path: /etc/default/jenkins
     regexp: '^JAVA_ARGS='
     line: 'JAVA_ARGS="-Djenkins.install.runSetupWizard=false"'
     create: yes
 
-- name: Crear directorio para scripts de inicialización
+- name: Create initialization scripts directories
   file:
     path: /var/lib/jenkins/init.groovy.d
     state: directory
@@ -58,7 +58,7 @@
     group: jenkins
     mode: '0755'
 
-- name: Copiar script Groovy para crear usuario admin
+- name: Copy Groovy script to create admin user
   copy:
     src: create-admin.groovy
     dest: /var/lib/jenkins/init.groovy.d/create-admin.groovy
@@ -66,12 +66,12 @@
     group: jenkins
     mode: '0644'
 
-- name: Reiniciar Jenkins para aplicar el script
+- name: Restart Jenkins to apply script
   systemd:
     name: jenkins
     state: restarted
 
-- name: Copiar archivo plugins.txt
+- name: Copy plugins.txt file
   copy:
     src: plugins.txt
     dest: /var/lib/jenkins/plugins.txt
@@ -79,7 +79,7 @@
     group: jenkins
     mode: '0644'
 
-- name: Crear script Groovy para credencial GitHub
+- name: Create Groovy script to GitHub credentials
   template:
     src: create_github_creds.groovy.j2
     dest: /var/lib/jenkins/init.groovy.d/create_github_creds.groovy
@@ -87,12 +87,12 @@
     group: jenkins
     mode: '0755'
 
-- name: Crear credenciales SSH en Jenkins
+- name: Create SSH credentials in Jenkins
   template:
     src: templates/create-ssh-cred.groovy.j2
     dest: /tmp/create-ssh-cred.xml
 
-- name: Crear credencial DockerHub en Jenkins (UsernamePassword)
+- name: Create DockerHub credentials in Jenkins (UsernamePassword)
   shell: |
     cat <<EOF | java -jar {{ jenkins_cli_jar_path }} \
       -s {{ jenkins_url }} \
@@ -111,20 +111,20 @@
   tags: dockerhub
 
 
-- name: Descargar jenkins-plugin-cli
+- name: Download jenkins-plugin-cli
   get_url:
     url: https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar
     dest: /usr/local/bin/jenkins-plugin-manager.jar
     mode: '0755'
 
-- name: Instalar plugins con jenkins-plugin-cli
+- name: Install plugins with jenkins-plugin-cli
   command: >
     java -jar /usr/local/bin/jenkins-plugin-manager.jar
     --war /usr/share/java/jenkins.war
     --plugin-file /var/lib/jenkins/plugins.txt
     --plugin-download-directory /var/lib/jenkins/plugins
 
-- name: Omitir el asistente de instalación de Jenkins
+- name: Discard installation assistant for Jenkins
   copy:
      content: "2.516.1"
      dest: /var/lib/jenkins/jenkins.install.InstallUtil.lastExecVersion
@@ -132,7 +132,7 @@
      group: jenkins
      mode: '0644'
 
-- name: Omitir el upgrade wizard
+- name: Discard upgrade wizard
   copy:
      content: "2.516.1"
      dest: /var/lib/jenkins/jenkins.install.UpgradeWizard.state
@@ -140,24 +140,24 @@
      group: jenkins
      mode: '0644'
 
-- name: Copiar job-config.xml
+- name: copy job-config.xml
   copy:
     src: files/job-config.xml
     dest: /tmp/job-config.xml
     mode: '0644'
 
-- name: Descargar jenkins-cli.jar desde el Jenkins en ejecución
+- name: Download jenkins-cli.jar
   get_url:
     url: "{{ jenkins_url }}/jnlpJars/jenkins-cli.jar"
     dest: "{{ jenkins_cli_jar_path }}"
     mode: '0755'
     force: yes
 
-- name: Verificar valores de jenkins_user y jenkins_password
+- name: Check jenkins user and jenkins password values
   debug:
     msg: "Usuario: {{ jenkins_user }}, Password: {{ jenkins_password }}"
 
-- name: Crear job Jenkins con autenticación
+- name: Create Jenkins job with authentication
   shell: |
     java -jar {{ jenkins_cli_jar_path }} \
     -s {{ jenkins_url }} \
@@ -165,17 +165,17 @@
     -auth {{ jenkins_user }}:{{ jenkins_password }} \
     create-job {{ job_name }} < /tmp/job-config.xml
 
-- name: Crear credencial SSH en Jenkins con CLI
+- name: Create SSH credentials
   shell: |
     java -jar {{ jenkins_cli_jar_path }} \
     -s {{ jenkins_url }} \
     -auth {{ jenkins_user }}:{{ jenkins_password }} \
     create-credentials-by-xml system::system::jenkins _ < /tmp/create-ssh-cred.xml
 
-- name: Crear nodo local 'jenkins' en Jenkins vía SSH
+- name: Create jenkins node
   set_fact:
     node_name: "jenkins"
-    node_description: "Agente local conectado por SSH"
+    node_description: "Local Agent connect by ssh"
     node_user: "ubuntu"
     node_port: 22
     ssh_credential_id: "ec2-ssh-key"
@@ -184,12 +184,12 @@
     node_labels: "jenkins"
     node_host: "127.0.0.1"
 
-- name: Generar archivo XML de configuración del nodo
+- name: Generate node XML configuration file
   template:
     src: node-config.xml.j2
     dest: "/tmp/{{ node_name }}.xml"
 
-- name: Crear nodo con Jenkins CLI
+- name: Create Jenkis node
   shell: |
     java -jar {{ jenkins_cli_jar_path }} \
     -s {{ jenkins_url }} \

@@ -1,4 +1,4 @@
-- name: Configurar servidor Jenkins
+- name: Configure Jenkins Server
   hosts: jenkins
   become: true
 

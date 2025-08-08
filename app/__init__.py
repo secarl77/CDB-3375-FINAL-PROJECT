@@ -2,6 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_session import Session
+from flask import Response
+from prometheus_flask_exporter import PrometheusMetrics
+
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -9,6 +13,12 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
+
+    metrics = PrometheusMetrics(app)
+    print("Rutas registradas:", [str(r) for r in app.url_map.iter_rules()])
+
+
+    print("Rutas registradas:", [rule.rule for rule in app.url_map.iter_rules()])
 
     # Initialize extensions
     db.init_app(app)
@@ -32,6 +42,14 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+
+
+
+    with app.app_context():
+        db.create_all()
+
+
+
 
     return app
 

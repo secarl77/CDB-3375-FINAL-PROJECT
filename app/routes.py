@@ -60,3 +60,4 @@ def update_user(user_id):
         return redirect(url_for("main.list_users"))
     return render_template("update_user.html", user=user)
 
+
